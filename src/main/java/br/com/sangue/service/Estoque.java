@@ -1,4 +1,4 @@
-package com.sangue.model;
+package com.sangue.service;
 
 public class Estoque {
     private String tipoSanguineo;

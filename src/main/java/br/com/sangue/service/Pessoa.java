@@ -1,4 +1,4 @@
-package com.sangue.model;
+package com.sangue.service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -7,7 +7,7 @@ public class Pessoa {
 
     private Long id;
     private String nomeCompleto;
-    private String cpf;
+    private String cpf; 
     private String senha;
     private int idade;
     private double peso;
