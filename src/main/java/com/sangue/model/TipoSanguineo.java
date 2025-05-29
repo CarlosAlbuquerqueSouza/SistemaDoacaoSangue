@@ -1,4 +1,4 @@
 package com.sangue.model;
 
-public class main {
+public class TipoSanguineo {
 }
