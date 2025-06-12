@@ -1,4 +1,4 @@
-package com.sangue.model;
+package br.com.sangue.model;
 
 import java.time.LocalDateTime;
 

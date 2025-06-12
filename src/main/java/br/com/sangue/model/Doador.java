@@ -1,4 +1,4 @@
-package com.sangue.model;
+package br.com.sangue.model;
 
 public class Doador {
 
@@ -65,4 +65,5 @@ public class Doador {
                 "Tipo: " + tipoSanguineo +  "\n" +
                 "Disponível: " + disponibilidade + "\n";
                 }
-    }
+
+}

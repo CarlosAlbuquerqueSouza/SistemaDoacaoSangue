@@ -1,10 +1,14 @@
-package br.com.sangue;
+package br.com.sangue.main;
 
+import br.com.sangue.model.Doador;
+import br.com.sangue.model.EstoqueSangue;
+import br.com.sangue.model.TipoSanguineo;
 import br.com.sangue.repository.*;
 import br.com.sangue.service.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class Main {
 
@@ -18,6 +22,12 @@ public class Main {
     private static NotificacaoService notificacaoService = new NotificacaoService();
 
     public static void main(String[] args) {
+        estoqueService.atualizarEstoque(TipoSanguineo.A_POSITIVO, 15);
+        estoqueService.atualizarEstoque(TipoSanguineo.A_NEGATIVO, 7);  // nível crítico
+        estoqueService.atualizarEstoque(TipoSanguineo.B_POSITIVO, 12);
+        estoqueService.atualizarEstoque(TipoSanguineo.O_NEGATIVO, 5);  // nível crítico
+        estoqueService.atualizarEstoque(TipoSanguineo.AB_POSITIVO, 20);
+        verificarEstoqueCriticoENotificar();
         SwingUtilities.invokeLater(Main::criarJanelaPrincipal);
     }
 
@@ -38,21 +48,21 @@ public class Main {
         JButton btnCadastrar = new JButton("Cadastrar Novo Doador");
         estilizarBotao(btnCadastrar, tamanhoBotao);
         btnCadastrar.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame, "Tela de Cadastro será implementada.");
+            new CadastroDoadorView(doadorService, estoqueService, notificacaoService);
         });
 
         // Botão: Visualizar estoque
         JButton btnEstoque = new JButton("Visualizar Estoque de Sangue");
         estilizarBotao(btnEstoque, tamanhoBotao);
         btnEstoque.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame, "Tela de Estoque será implementada.");
+            new EstoqueView(estoqueService);
         });
 
         // Botão: Visualizar notificações
         JButton btnNotificacoes = new JButton("Visualizar Notificações");
         estilizarBotao(btnNotificacoes, tamanhoBotao);
         btnNotificacoes.addActionListener(e -> {
-            JOptionPane.showMessageDialog(frame, "Tela de Notificações será implementada.");
+            new NotificacaoView(notificacaoService);
         });
 
         // Botão: Sair
@@ -80,5 +90,17 @@ public class Main {
         botao.setAlignmentX(Component.CENTER_ALIGNMENT);
         botao.setMaximumSize(tamanho);
         botao.setFocusPainted(false);
+    }
+
+    private static void verificarEstoqueCriticoENotificar() {
+        List<EstoqueSangue> criticos = estoqueService.listarCriticos();
+
+        for (EstoqueSangue estoque : criticos) {
+            List<Doador> doadores = doadorService.buscarDisponiveisPorTipo(estoque.getTipo());
+
+            if (!doadores.isEmpty()) {
+                notificacaoService.notificarMultiplos(doadores);
+            }
+        }
     }
 }

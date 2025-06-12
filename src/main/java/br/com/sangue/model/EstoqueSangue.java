@@ -1,4 +1,4 @@
-package com.sangue.model;
+package br.com.sangue.model;
 
 public class EstoqueSangue {
 
@@ -31,5 +31,13 @@ public class EstoqueSangue {
         return "EstoqueSangue: \n" +
                 "Tipo: " + tipo + "\n" +
                 "Quantidade: " + quantidadeUnidades;
+    }
+
+    public boolean isCritico() {
+        if (getQuantidadeUnidades() <= 10){
+            return true;
+        } else  {
+            return false;
+        }
     }
 }
