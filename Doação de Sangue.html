@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Doação de Sangue</title>
+  <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+  <header>
+    <div
+      style="width:44px;height:44px;border-radius:10px;background:#fff3f3;display:flex;align-items:center;justify-content:center;color:var(--accent-dark);font-weight:800">
+      H+</div>
+    <div>
+      <h1>Sistema de Doação de Sangue</h1>
+      <p>Cadastro de doadores, Controle de estoque e Notificações.</p>
+    </div>
+  </header>
+
+  <main class="container" role="main">
+    <section>
+      <div class="card" id="cadastroCard">
+        <h2>Cadastro de Doador</h2>
+        <form id="doadorForm">
+          <div class="row">
+            <div class="field">
+              <label for="nome">Nome completo</label>
+              <input id="nome" type="text" required placeholder="Ex: João da Silva" />
+            </div>
+            <div class="field">
+              <label for="idade">Idade</label>
+              <input id="idade" type="number" min="16" max="120" required placeholder="Idade" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="peso">Peso (kg)</label>
+              <input id="peso" type="number" min="40" required placeholder="Ex: 72" />
+            </div>
+            <div class="field">
+              <label for="tipo">Tipo sanguíneo</label>
+              <select id="tipo" required>
+                <option value="">Selecione</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="disponivel">Disponível para doação?</label>
+              <select id="disponivel" required>
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="contato">Contato (telefone/email)</label>
+              <input id="contato" type="text" placeholder="(51) 9xxxx-xxxx ou email@ex.com" />
+            </div>
+          </div>
+
+          <div style="display:flex;gap:0.6rem;margin-top:0.6rem">
+            <button class="btn btn-primary" type="submit">Cadastrar doador</button>
+            <button class="btn btn-ghost" type="button" id="limparForm">Limpar</button>
+            <div style="margin-left:auto" class="muted small" id="countDoadores">Doadores: 0</div>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" style="margin-top:1rem" id="estoqueCard">
+        <h2>Estoque de Sangue</h2>
+        <p class="muted small">Atualize quantidades e veja tipos em nível crítico.</p>
+
+        <div style="display:flex;gap:0.6rem;margin:0.6rem 0 1rem 0;flex-wrap:wrap">
+          <select id="tipoEstoque" style="min-width:160px">
+            <option value="">Tipo para adicionar/atualizar</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+          <input id="qtdEstoque" type="number" min="0" placeholder="Quantidade (bolsas)" style="width:160px" />
+          <button class="btn btn-primary" id="btnAtualizarEstoque">Atualizar estoque</button>
+          <button class="btn btn-ghost" id="btnResetEstoque" title="Zerar estoque">Reset estoque</button>
+        </div>
+
+        <table id="tabelaEstoque" aria-describedby="estoqueCard">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Quantidade</th>
+              <th>Estado</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-top:1rem" id="notificacoesCard">
+        <h2>Notificações</h2>
+        <p class="muted small">Mensagens criadas para doadores quando um tipo está crítico.</p>
+        <div id="listaNotificacoes" class="list" style="margin-top:0.5rem"></div>
+        <div style="margin-top:0.6rem" class="controls">
+          <button id="limparNotificacoes" class="btn btn-ghost">Limpar notificações</button>
+        </div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="card">
+        <h2>Pesquisar Doadores</h2>
+        <div class="stack">
+          <label for="filtroTipo">Filtrar por tipo sanguíneo</label>
+          <select id="filtroTipo">
+            <option value="">Todos</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+          <div id="listaDoadores" style="margin-top:0.6rem;max-height:340px;overflow:auto"></div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1rem">
+        <h2>Resumo</h2>
+        <p class="muted small">Status rápido do sistema.</p>
+        <div style="margin-top:0.6rem" class="stack">
+          <div class="flex">
+            <div class="tag">Doadores</div>
+            <div style="margin-left:auto;font-weight:700" id="resDoadores">0</div>
+          </div>
+          <div class="flex">
+            <div class="tag">Tipos em crítico</div>
+            <div style="margin-left:auto;font-weight:700" id="resCriticos">0</div>
+          </div>
+          <div class="flex">
+            <div class="tag">Notificações</div>
+            <div style="margin-left:auto;font-weight:700" id="resNotifs">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1rem">
+        <h2>Sobre</h2>
+        <p class="muted small">Doação de sangue — dados gravados localmente no navegador (em memória persistente).</p>
+        <div style="margin-top:0.6rem" class="small muted">Use para testar fluxo: cadastre doadores, atualize estoques e
+          gere notificações automáticas.</div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="center">Protótipo simples — não para uso em produção. Dados salvos no navegador.</div>
+  </footer>
+
+  <script src="js/index.js"></script>
+</body>
+
+</html>
